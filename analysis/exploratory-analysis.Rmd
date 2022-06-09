@@ -163,6 +163,6 @@ trap_sr_ts %>% drop_na(habitat) %>%
 ### 4. Community structure
 As well as the total species richness of communities, its also important to understand their structure, i.e. are there any trends in species turnover. This application displays the results from  different clustering algorithms applied to the species level data, which were applied to highlight trends in community composition. I applied three different methods, NMDS , t-SNE, and UMAP, to reduce the dimensions of the community data, and the results are 3d visualizations of community composition for each lysate sample. You can visualize trends according to different covariate data using the drop down menu. There are clear changes in community composition with time (the week variable), and latitude. 
 
-<iframe src ="https://robgoodsell.shinyapps.io/community_structure_app/" height=1000px width=1000px />
+<iframe src ="https://robgoodsell.shinyapps.io/community_structure_app/" height=3000px width=3000px />
 
 
