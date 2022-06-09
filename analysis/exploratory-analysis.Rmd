@@ -18,6 +18,11 @@ editor_options:
 
 The purpose of this site is to document and share some preliminary analyses exploring trends in species richness and community composition from the Species tables generated from sequencing of the IBA lysate samples. 
 
+Here we use two data files:
+
+1. The species table generated from sequencing of the lysate samples - 'MBs_12.merged.species.tsv'
+2. Some general sample information (location, habitat type etc) - 'IBA_samples_master.csv'
+
 ### Load packages & data
 ```{r , message=FALSE , warning=FALSE}
 #packages
@@ -53,7 +58,16 @@ IBA_locs    <- read.csv2("data/IBA_samples_master.csv")  %>% # Sample lookup
 ```
 
 ### House keeping
-Here we just need to remove the spike sequences from our samples, remove the unclassified species, extraction contols, and filter out low frequency reads. 
+Before any analysis we need to due some general filtering & data tidying steps. The things we need to filter out are:
+
+1. The spike-in sequences.
+2. Any non-arthropod sequences.
+3. Any unclassified sequences.
+4. Any sequences with low (<20) read numbers.
+5. The negative / positive control samples. 
+
+We then join with the species information with sample information.
+
 ```{r , message=FALSE , warning=FALSE}
 
 #Spike ins
@@ -80,7 +94,7 @@ arthropods  <-  filter(IBA_species , Phylum == "Arthropoda") %>%
 
 
 ### 2. Species richness vs Habitat
-There are clear trends of species richness across different habitats, with grasslands and croplands having the highest number of species, however all habitats are associated with wide distributions.
+Something important to consider are the trends in species richness across different habitat types. There are clear trends of species richness across different habitats, with grasslands and croplands having the highest number of species, however all habitats are associated with fairly wide distributions.
 
 ```{r , warning=FALSE , message=FALSE , fig.cap="Species richness (aggregated by trap), across habitat types. Each point is the cumulative species richness over the full year sampling period" }
 trap_sr <- arthropods %>%
@@ -124,7 +138,7 @@ trap_sr_geo <- arthropods %>%
 ggplot()+
   geom_sf(data =sweden)+
   geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
-                                      fill = species_richness), pch=21 , alpha = .5)+
+                                      fill = species_richness), pch=21 , alpha = 1)+
   scale_size_continuous(range = c(1,2))+
   facet_wrap(~habitat , nrow = 1)+
   theme(legend.position = "none" , axis.text = element_blank())
