@@ -1,0 +1,168 @@
+---
+title: "Exploratory analyses of the IBA data"
+author: "Rob Goodsell"
+date: '2022-06-06'
+output:
+  html_document:
+    toc: no
+    df_print: paged
+  workflowr::wflow_html:
+    toc: no
+    code_folding: hide
+  html_notebook: default
+editor_options:
+  chunk_output_type: console
+---
+
+# 1. Introduction
+
+The purpose of this site is to document and share some preliminary analyses exploring trends in species richness and community composition from the Species tables generated from sequencing of the IBA lysate samples. 
+
+### Load packages & data
+```{r , message=FALSE , warning=FALSE}
+#packages
+library(tidyverse)
+library(ggbeeswarm)
+library(MetBrewer)
+library(lubridate)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(vegan)
+library(plotly)
+library(RColorBrewer)
+library(Rtsne)
+library(umap)
+
+
+#Load data
+IBA_species <- read_tsv("data/MBs_12.merged.species.tsv")    # Species table
+
+IBA_locs    <- read.csv2("data/IBA_samples_master.csv")  %>% # Sample lookup
+  select(trap_ID, sample_ID , habitat , lysate_ID , biomass_grams , 
+         lat = trap_lat , lon = trap_long ,collecting_date) %>% 
+  mutate(habitat = str_remove(habitat , "\\?")) %>% 
+  mutate(habitat = case_when(habitat == "wind_farm" ~ "Wetland" , 
+                             habitat == "Cropland/Grassland" ~ "Grassland" , 
+                             habitat == "Urban/Cropland" ~ "Cropland",
+                             habitat == "Forest/Grassland" ~ "Grassland" , 
+                             TRUE ~ habitat))  %>% 
+  mutate(week = week(as_date(collecting_date)),
+        month = month(as_date(collecting_date))) %>% droplevels()
+
+```
+
+### House keeping
+Here we just need to remove the spike sequences from our samples, remove the unclassified species, extraction contols, and filter out low frequency reads. 
+```{r , message=FALSE , warning=FALSE}
+
+#Spike ins
+spike_ins <- c("Shelfordella lateralis", "Gryllus bimaculatus", 
+               "Drosophila bicornuta",  "Drosophila serrata", 
+               "Gryllodes supplicans", "Gryllus campestris")
+
+arthropods  <-  filter(IBA_species , Phylum == "Arthropoda") %>%  
+         # Remove unclassified sequences and spike ins
+         filter(!str_detect(Species , "unclassified|_X$|_XX$|_XXX$"),    
+                !Species %in% spike_ins) %>%   
+         # General tidying
+         select(-c("Kingdom" , "Phylum" , "Class" , 
+                   "Order" , "Family" , "Genus" , "BOLD_bin")) %>%  
+         pivot_longer(-Species , names_to = "lysate_ID" , 
+                                values_to = "reads") %>%                   
+         mutate(lysate_ID = str_remove_all(lysate_ID , "^FL[0-9]+_")) %>%          
+         # Remove low frequency reads & control samples
+         filter(reads > 20 , !str_detect(lysate_ID , "[Nn]eg|[Pp]os|air")) %>%                      
+         left_join(IBA_locs)
+
+
+```
+
+
+### 2. Species richness vs Habitat
+There are clear trends of species richness across different habitats, with grasslands and croplands having the highest number of species, however all habitats are associated with wide distributions.
+
+```{r , warning=FALSE , message=FALSE , fig.cap="Species richness (aggregated by trap), across habitat types. Each point is the cumulative species richness over the full year sampling period" }
+trap_sr <- arthropods %>%
+        group_by(trap_ID , Species ,  habitat) %>% 
+        summarise(total_reads = sum(reads)) %>%
+        ungroup() %>% 
+        mutate(pres = 1*(total_reads>0)) %>%  # convert reads to presence absence
+        group_by(trap_ID , habitat) %>% 
+        summarise(species_richness = sum(pres))
+
+trap_sr %>% drop_na(habitat) %>% 
+          ggplot(aes(reorder(habitat , - species_richness) , species_richness))+
+          geom_violin(aes(fill=habitat) , alpha = .2 , lwd = 0)+
+          geom_beeswarm(aes(fill = habitat) , pch=21 , alpha = .7 , size = 1.2)+
+          geom_pointrange(stat="summary" , pch = 21 , fill = "white", size = 1.25, fatten = 1.25)+
+          scale_fill_manual(values=met.brewer("Moreau", 7))+
+          theme_classic()+
+          coord_flip()+
+          theme(legend.position = "none" , panel.grid.major.y = element_line( linetype = 2) , 
+                axis.text = element_text(size = 10),
+                axis.title = element_text(size = 14))+
+          labs(y = "Species richness" , x = "Habitat" , fill = "Habitat")
+
+```
+    
+However it's not clear whether these effects are causal or colinear with climatic or other latitudinal gradients, as habitats have different geographic ranges. For example croplands and grasslands are primarily southerly, whilst forests have a more even distribution across the country. 
+```{r , warnings = FALSE , message=FALSE , fig.cap="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap."}
+# get map outline
+sweden <- ne_countries(country = "sweden" , scale = "large" , returnclass = "sf") %>% 
+  st_transform(crs = 4124)
+
+trap_sr_geo <- arthropods %>% 
+  group_by(trap_ID , Species ,habitat , month , lat , lon) %>% 
+  summarise(total_reads = sum(reads)) %>%
+  ungroup() %>% 
+  mutate(pres = 1*(total_reads>0)) %>%  # convert reads to presence absence
+  group_by(trap_ID , lat, lon, habitat) %>% 
+  summarise(species_richness = sum(pres)) %>%
+  ungroup() %>% drop_na(lon , lat) 
+
+ggplot()+
+  geom_sf(data =sweden)+
+  geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
+                                      fill = species_richness), pch=21 , alpha = .5)+
+  scale_size_continuous(range = c(1,2))+
+  facet_wrap(~habitat , nrow = 1)+
+  theme(legend.position = "none" , axis.text = element_blank())
+```
+
+
+  
+    
+    
+### 3. Species richness over time
+A key question is how species richness changes over time. It's clear that all habitats display the same seasonal trend in total species richness, with the highest diversity in the summer months, but a secondary 'peak' in autumn. 
+
+```{r , echo=FALSE , warning=FALSE , message=FALSE , fig.cap="Species richness over time for each habitat type. Points represent species richness of an individial trap, fitted lines are smooth terms from a gam fitted to species richness trends over time"}
+
+trap_sr_ts <- arthropods %>% 
+  group_by(trap_ID , Species ,  habitat , week) %>% 
+  summarise(total_reads = sum(reads)) %>%
+  ungroup() %>% 
+  mutate(pres = 1*(total_reads>0)) %>% 
+  group_by(trap_ID , habitat , week) %>% 
+  summarise(species_richness = sum(pres))
+
+trap_sr_ts %>% drop_na(habitat) %>% 
+  ggplot(aes(week , species_richness , group))+
+  geom_point(aes(colour = habitat , group=trap_ID) , alpha = .3 , size = .8)+
+  geom_smooth(aes(group=habitat) , colour = "black" , lty =  1, lwd = .6)+
+  scale_colour_manual(values=met.brewer("Moreau", 7))+
+  facet_wrap(~habitat , nrow = 2)+
+  theme_minimal()+
+  theme(legend.position = "none"  , strip.text = element_text(size=15) ,
+        axis.title = element_text(size = 15))+
+  labs(y = "Species richness" , x = "Week of the year")
+
+```
+
+### 4. Community structure
+As well as the total species richness of communities, its also important to understand their structure, i.e. are there any trends in species turnover. This application displays the results from  different clustering algorithms applied to the species level data, which were applied to highlight trends in community composition. I applied three different methods, NMDS , t-SNE, and UMAP, to reduce the dimensions of the community data, and the results are 3d visualizations of community composition for each lysate sample. You can visualize trends according to different covariate data using the drop down menu. There are clear changes in community composition with time (the week variable), and latitude. 
+```{r shiny-app}
+knitr::include_app("https://robgoodsell.shinyapps.io/community_structure_app/")
+```
+
