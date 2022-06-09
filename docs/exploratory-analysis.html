@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Rob Goodsell" />
+
+<meta name="date" content="2022-06-06" />
+
+<title>Exploratory analyses of the IBA data</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Insect-biome-atlas</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Exploratory analyses of the IBA data</h1>
+<h4 class="author">Rob Goodsell</h4>
+<h4 class="date">2022-06-06</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-06-09
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Insect-biome-atlas/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220609code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220609)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220609code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220609)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronge40532f">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> e40532f
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstronge40532f"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version e40532f.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  data/IBA_samples_master.csv
+    Untracked:  data/IBA_samples_master.xlsx
+    Untracked:  data/MBs_12.merged.species.tsv
+    Untracked:  data/biomass_sweden_2019.csv
+    Untracked:  data/clustering.rds
+    Untracked:  data/nmds_samples.rds
+    Untracked:  data/tsne_samples.rds
+    Untracked:  data/umap_samples.rds
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/exploratory-analysis.Rmd</code>)
+and HTML (<code>docs/exploratory-analysis.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+e40532f
+</td>
+<td>
+Rgoodsell
+</td>
+<td>
+2022-06-09
+</td>
+<td>
+update analysis &amp; data for IBA project
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level1">
+<h1>1. Introduction</h1>
+<p>The purpose of this site is to document and share some preliminary
+analyses exploring trends in species richness and community composition
+from the Species tables generated from sequencing of the IBA lysate
+samples.</p>
+<div id="load-packages-data" class="section level3">
+<h3>Load packages &amp; data</h3>
+<pre class="r"><code>#packages
+library(tidyverse)
+library(ggbeeswarm)
+library(MetBrewer)
+library(lubridate)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(vegan)
+library(plotly)
+library(RColorBrewer)
+library(Rtsne)
+library(umap)
+
+
+#Load data
+IBA_species &lt;- read_tsv(&quot;data/MBs_12.merged.species.tsv&quot;)    # Species table
+
+IBA_locs    &lt;- read.csv2(&quot;data/IBA_samples_master.csv&quot;)  %&gt;% # Sample lookup
+  select(trap_ID, sample_ID , habitat , lysate_ID , biomass_grams , 
+         lat = trap_lat , lon = trap_long ,collecting_date) %&gt;% 
+  mutate(habitat = str_remove(habitat , &quot;\\?&quot;)) %&gt;% 
+  mutate(habitat = case_when(habitat == &quot;wind_farm&quot; ~ &quot;Wetland&quot; , 
+                             habitat == &quot;Cropland/Grassland&quot; ~ &quot;Grassland&quot; , 
+                             habitat == &quot;Urban/Cropland&quot; ~ &quot;Cropland&quot;,
+                             habitat == &quot;Forest/Grassland&quot; ~ &quot;Grassland&quot; , 
+                             TRUE ~ habitat))  %&gt;% 
+  mutate(week = week(as_date(collecting_date)),
+        month = month(as_date(collecting_date))) %&gt;% droplevels()</code></pre>
+</div>
+<div id="house-keeping" class="section level3">
+<h3>House keeping</h3>
+<p>Here we just need to remove the spike sequences from our samples,
+remove the unclassified species, extraction contols, and filter out low
+frequency reads.</p>
+<pre class="r"><code>#Spike ins
+spike_ins &lt;- c(&quot;Shelfordella lateralis&quot;, &quot;Gryllus bimaculatus&quot;, 
+               &quot;Drosophila bicornuta&quot;,  &quot;Drosophila serrata&quot;, 
+               &quot;Gryllodes supplicans&quot;, &quot;Gryllus campestris&quot;)
+
+arthropods  &lt;-  filter(IBA_species , Phylum == &quot;Arthropoda&quot;) %&gt;%  
+         # Remove unclassified sequences and spike ins
+         filter(!str_detect(Species , &quot;unclassified|_X$|_XX$|_XXX$&quot;),    
+                !Species %in% spike_ins) %&gt;%   
+         # General tidying
+         select(-c(&quot;Kingdom&quot; , &quot;Phylum&quot; , &quot;Class&quot; , 
+                   &quot;Order&quot; , &quot;Family&quot; , &quot;Genus&quot; , &quot;BOLD_bin&quot;)) %&gt;%  
+         pivot_longer(-Species , names_to = &quot;lysate_ID&quot; , 
+                                values_to = &quot;reads&quot;) %&gt;%                   
+         mutate(lysate_ID = str_remove_all(lysate_ID , &quot;^FL[0-9]+_&quot;)) %&gt;%          
+         # Remove low frequency reads &amp; control samples
+         filter(reads &gt; 20 , !str_detect(lysate_ID , &quot;[Nn]eg|[Pp]os|air&quot;)) %&gt;%                      
+         left_join(IBA_locs)</code></pre>
+</div>
+<div id="species-richness-vs-habitat" class="section level3">
+<h3>2. Species richness vs Habitat</h3>
+<p>There are clear trends of species richness across different habitats,
+with grasslands and croplands having the highest number of species,
+however all habitats are associated with wide distributions.</p>
+<pre class="r"><code>trap_sr &lt;- arthropods %&gt;%
+        group_by(trap_ID , Species ,  habitat) %&gt;% 
+        summarise(total_reads = sum(reads)) %&gt;%
+        ungroup() %&gt;% 
+        mutate(pres = 1*(total_reads&gt;0)) %&gt;%  # convert reads to presence absence
+        group_by(trap_ID , habitat) %&gt;% 
+        summarise(species_richness = sum(pres))
+
+trap_sr %&gt;% drop_na(habitat) %&gt;% 
+          ggplot(aes(reorder(habitat , - species_richness) , species_richness))+
+          geom_violin(aes(fill=habitat) , alpha = .2 , lwd = 0)+
+          geom_beeswarm(aes(fill = habitat) , pch=21 , alpha = .7 , size = 1.2)+
+          geom_pointrange(stat=&quot;summary&quot; , pch = 21 , fill = &quot;white&quot;, size = 1.25, fatten = 1.25)+
+          scale_fill_manual(values=met.brewer(&quot;Moreau&quot;, 7))+
+          theme_classic()+
+          coord_flip()+
+          theme(legend.position = &quot;none&quot; , panel.grid.major.y = element_line( linetype = 2) , 
+                axis.text = element_text(size = 10),
+                axis.title = element_text(size = 14))+
+          labs(y = &quot;Species richness&quot; , x = &quot;Habitat&quot; , fill = &quot;Habitat&quot;)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-3-1.png" alt="Species richness (aggregated by trap), across habitat types. Each point is the cumulative species richness over the full year sampling period" width="672" />
+<p class="caption">
+Species richness (aggregated by trap), across habitat types. Each point
+is the cumulative species richness over the full year sampling period
+</p>
+</div>
+<p>However it’s not clear whether these effects are causal or colinear
+with climatic or other latitudinal gradients, as habitats have different
+geographic ranges. For example croplands and grasslands are primarily
+southerly, whilst forests have a more even distribution across the
+country.</p>
+<pre class="r"><code># get map outline
+sweden &lt;- ne_countries(country = &quot;sweden&quot; , scale = &quot;large&quot; , returnclass = &quot;sf&quot;) %&gt;% 
+  st_transform(crs = 4124)
+
+trap_sr_geo &lt;- arthropods %&gt;% 
+  group_by(trap_ID , Species ,habitat , month , lat , lon) %&gt;% 
+  summarise(total_reads = sum(reads)) %&gt;%
+  ungroup() %&gt;% 
+  mutate(pres = 1*(total_reads&gt;0)) %&gt;%  # convert reads to presence absence
+  group_by(trap_ID , lat, lon, habitat) %&gt;% 
+  summarise(species_richness = sum(pres)) %&gt;%
+  ungroup() %&gt;% drop_na(lon , lat) 
+
+ggplot()+
+  geom_sf(data =sweden)+
+  geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
+                                      fill = species_richness), pch=21 , alpha = .5)+
+  scale_size_continuous(range = c(1,2))+
+  facet_wrap(~habitat , nrow = 1)+
+  theme(legend.position = &quot;none&quot; , axis.text = element_blank())</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-4-1.png" alt="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." width="672" />
+<p class="caption">
+Trap locations across different habitat types, point size represent
+cumulative species richness across full sampling year for a single trap.
+</p>
+</div>
+</div>
+<div id="species-richness-over-time" class="section level3">
+<h3>3. Species richness over time</h3>
+<p>A key question is how species richness changes over time. It’s clear
+that all habitats display the same seasonal trend in total species
+richness, with the highest diversity in the summer months, but a
+secondary ‘peak’ in autumn.</p>
+<div class="figure" style="text-align: center">
+<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-5-1.png" alt="Species richness over time for each habitat type. Points represent species richness of an individial trap, fitted lines are smooth terms from a gam fitted to species richness trends over time" width="672" />
+<p class="caption">
+Species richness over time for each habitat type. Points represent
+species richness of an individial trap, fitted lines are smooth terms
+from a gam fitted to species richness trends over time
+</p>
+</div>
+</div>
+<div id="community-structure" class="section level3">
+<h3>4. Community structure</h3>
+<p>As well as the total species richness of communities, its also
+important to understand their structure, i.e. are there any trends in
+species turnover. This application displays the results from different
+clustering algorithms applied to the species level data, which were
+applied to highlight trends in community composition. I applied three
+different methods, NMDS , t-SNE, and UMAP, to reduce the dimensions of
+the community data, and the results are 3d visualizations of community
+composition for each lysate sample. You can visualize trends according
+to different covariate data using the drop down menu. There are clear
+changes in community composition with time (the week variable), and
+latitude.</p>
+<pre class="r"><code>knitr::include_app(&quot;https://robgoodsell.shinyapps.io/community_structure_app/&quot;)</code></pre>
+<iframe src="https://robgoodsell.shinyapps.io/community_structure_app/?showcase=0" width="672" height="400px" data-external="1">
+</iframe>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Monterey 12.3.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] umap_0.2.8.0            Rtsne_0.16              RColorBrewer_1.1-3     
+ [4] plotly_4.10.0           vegan_2.6-2             lattice_0.20-45        
+ [7] permute_0.9-7           sf_1.0-7                rnaturalearthdata_0.1.0
+[10] rnaturalearth_0.1.0     lubridate_1.8.0         MetBrewer_0.2.0        
+[13] ggbeeswarm_0.6.0        forcats_0.5.1           stringr_1.4.0          
+[16] dplyr_1.0.9             purrr_0.3.4             readr_2.1.2            
+[19] tidyr_1.2.0             tibble_3.1.7            ggplot2_3.3.6          
+[22] tidyverse_1.3.1         workflowr_1.7.0        
+
+loaded via a namespace (and not attached):
+ [1] colorspace_2.0-3         ellipsis_0.3.2           class_7.3-20            
+ [4] rprojroot_2.0.3          fs_1.5.2                 rstudioapi_0.13         
+ [7] proxy_0.4-26             farver_2.1.0             bit64_4.0.5             
+[10] RSpectra_0.16-1          fansi_1.0.3              xml2_1.3.3              
+[13] splines_4.2.0            knitr_1.39               jsonlite_1.8.0          
+[16] broom_0.8.0              cluster_2.1.3            dbplyr_2.1.1            
+[19] png_0.1-7                compiler_4.2.0           httr_1.4.3              
+[22] backports_1.4.1          assertthat_0.2.1         Matrix_1.4-1            
+[25] fastmap_1.1.0            lazyeval_0.2.2           cli_3.3.0               
+[28] s2_1.0.7                 later_1.3.0              htmltools_0.5.2         
+[31] tools_4.2.0              gtable_0.3.0             glue_1.6.2              
+[34] wk_0.6.0                 Rcpp_1.0.8.3             cellranger_1.1.0        
+[37] jquerylib_0.1.4          vctrs_0.4.1              nlme_3.1-157            
+[40] xfun_0.31                ps_1.7.0                 rvest_1.0.2             
+[43] lifecycle_1.0.1          rnaturalearthhires_0.2.0 getPass_0.2-2           
+[46] MASS_7.3-56              scales_1.2.0             vroom_1.5.7             
+[49] hms_1.1.1                promises_1.2.0.1         parallel_4.2.0          
+[52] yaml_2.3.5               reticulate_1.25          sass_0.4.1              
+[55] stringi_1.7.6            highr_0.9                e1071_1.7-9             
+[58] rlang_1.0.2              pkgconfig_2.0.3          evaluate_0.15           
+[61] labeling_0.4.2           htmlwidgets_1.5.4        bit_4.0.4               
+[64] processx_3.5.3           tidyselect_1.1.2         magrittr_2.0.3          
+[67] R6_2.5.1                 generics_0.1.2           DBI_1.1.2               
+[70] pillar_1.7.0             haven_2.5.0              whisker_0.4             
+[73] withr_2.5.0              mgcv_1.8-40              units_0.8-0             
+[76] sp_1.4-7                 modelr_0.1.8             crayon_1.5.1            
+[79] KernSmooth_2.23-20       utf8_1.2.2               tzdb_0.3.0              
+[82] rmarkdown_2.14           grid_4.2.0               readxl_1.4.0            
+[85] data.table_1.14.2        callr_3.7.0              git2r_0.30.1            
+[88] reprex_2.0.1             digest_0.6.29            classInt_0.4-3          
+[91] httpuv_1.6.5             openssl_2.0.1            munsell_0.5.0           
+[94] beeswarm_0.4.0           viridisLite_0.4.0        vipor_0.4.5             
+[97] bslib_0.3.1              askpass_1.1             </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
