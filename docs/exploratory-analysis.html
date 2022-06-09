@@ -463,15 +463,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastreed6e58ddfdc50206ad43602b09e5c88b1e40270aetargetblankd6e58dda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastreee955fa28e54ca2c494832ea065c4c72d993083a9targetblanke955fa2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/d6e58ddfdc50206ad43602b09e5c88b1e40270ae" target="_blank">d6e58dd</a>
+<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/e955fa28e54ca2c494832ea065c4c72d993083a9" target="_blank">e955fa2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastreed6e58ddfdc50206ad43602b09e5c88b1e40270aetargetblankd6e58dda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastreee955fa28e54ca2c494832ea065c4c72d993083a9targetblanke955fa2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -481,7 +481,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/d6e58ddfdc50206ad43602b09e5c88b1e40270ae" target="_blank">d6e58dd</a>.
+<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/e955fa28e54ca2c494832ea065c4c72d993083a9" target="_blank">e955fa2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -549,6 +549,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Rgoodsell/Insect-biome-atlas/blob/e955fa28e54ca2c494832ea065c4c72d993083a9/analysis/exploratory-analysis.Rmd" target="_blank">e955fa2</a>
+</td>
+<td>
+Rgoodsell
+</td>
+<td>
+2022-06-09
+</td>
+<td>
+update analysis &amp; data for IBA project
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Rgoodsell/Insect-biome-atlas/b293b09720bd94ca82b8d50a3b26d837a5e58505/docs/exploratory-analysis.html" target="_blank">b293b09</a>
+</td>
+<td>
+Rgoodsell
+</td>
+<td>
+2022-06-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -749,6 +783,13 @@ update analysis &amp; data for IBA project
 analyses exploring trends in species richness and community composition
 from the Species tables generated from sequencing of the IBA lysate
 samples.</p>
+<p>Here we use two data files:</p>
+<ol style="list-style-type: decimal">
+<li>The species table generated from sequencing of the lysate samples -
+‘MBs_12.merged.species.tsv’</li>
+<li>Some general sample information (location, habitat type etc) -
+‘IBA_samples_master.csv’</li>
+</ol>
 <div id="load-packages-data" class="section level3">
 <h3>Load packages &amp; data</h3>
 <pre class="r"><code>#packages
@@ -783,9 +824,17 @@ IBA_locs    &lt;- read.csv2(&quot;data/IBA_samples_master.csv&quot;)  %&gt;% # S
 </div>
 <div id="house-keeping" class="section level3">
 <h3>House keeping</h3>
-<p>Here we just need to remove the spike sequences from our samples,
-remove the unclassified species, extraction contols, and filter out low
-frequency reads.</p>
+<p>Before any analysis we need to due some general filtering &amp; data
+tidying steps. The things we need to filter out are:</p>
+<ol style="list-style-type: decimal">
+<li>The spike-in sequences.</li>
+<li>Any non-arthropod sequences.</li>
+<li>Any unclassified sequences.</li>
+<li>Any sequences with low (&lt;20) read numbers.</li>
+<li>The negative / positive control samples.</li>
+</ol>
+<p>We then join with the species information with sample
+information.</p>
 <pre class="r"><code>#Spike ins
 spike_ins &lt;- c(&quot;Shelfordella lateralis&quot;, &quot;Gryllus bimaculatus&quot;, 
                &quot;Drosophila bicornuta&quot;,  &quot;Drosophila serrata&quot;, 
@@ -807,9 +856,11 @@ arthropods  &lt;-  filter(IBA_species , Phylum == &quot;Arthropoda&quot;) %&gt;%
 </div>
 <div id="species-richness-vs-habitat" class="section level3">
 <h3>2. Species richness vs Habitat</h3>
-<p>There are clear trends of species richness across different habitats,
-with grasslands and croplands having the highest number of species,
-however all habitats are associated with wide distributions.</p>
+<p>Something important to consider are the trends in species richness
+across different habitat types. There are clear trends of species
+richness across different habitats, with grasslands and croplands having
+the highest number of species, however all habitats are associated with
+fairly wide distributions.</p>
 <pre class="r"><code>trap_sr &lt;- arthropods %&gt;%
         group_by(trap_ID , Species ,  habitat) %&gt;% 
         summarise(total_reads = sum(reads)) %&gt;%
@@ -895,7 +946,7 @@ trap_sr_geo &lt;- arthropods %&gt;%
 ggplot()+
   geom_sf(data =sweden)+
   geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
-                                      fill = species_richness), pch=21 , alpha = .5)+
+                                      fill = species_richness), pch=21 , alpha = 1)+
   scale_size_continuous(range = c(1,2))+
   facet_wrap(~habitat , nrow = 1)+
   theme(legend.position = &quot;none&quot; , axis.text = element_blank())</code></pre>
