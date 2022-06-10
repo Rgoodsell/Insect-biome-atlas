@@ -16,7 +16,7 @@ editor_options:
 
 # 1. Introduction
 
-The purpose of this site is to document and share some preliminary analyses exploring trends in species richness and community composition from the Species tables generated from sequencing of the IBA lysate samples. 
+The purpose of this site is to document and share some preliminary analyses exploring trends in species richness and community composition from the species tables generated from sequencing of the IBA lysate samples. 
 
 Here we use two data files:
 
@@ -121,7 +121,7 @@ trap_sr %>% drop_na(habitat) %>%
 ```
     
 However it's not clear whether these effects are causal or colinear with climatic or other latitudinal gradients, as habitats have different geographic ranges. For example croplands and grasslands are primarily southerly, whilst forests have a more even distribution across the country. 
-```{r , warnings = FALSE , message=FALSE , fig.cap="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap."}
+```{r , warnings = FALSE , message=FALSE , fig.cap="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." , fig.width=10 , fig.height = 5}
 # get map outline
 sweden <- ne_countries(country = "sweden" , scale = "large" , returnclass = "sf") %>% 
   st_transform(crs = 4124)
@@ -149,7 +149,7 @@ ggplot()+
     
     
 ### 3. Species richness over time
-A key question is how species richness changes over time. It's clear that all habitats display the same seasonal trend in total species richness, with the highest diversity in the summer months, but a secondary 'peak' in autumn. 
+A key question is how species richness changes over time. The plot below displays the change in species richness over time for each habitat. It's clear that all habitats display the same seasonal trend in total species richness, with the highest diversity in the summer months, but a secondary 'peak' in autumn. 
 
 ```{r , echo=FALSE , warning=FALSE , message=FALSE , fig.cap="Species richness over time for each habitat type. Points represent species richness of an individial trap, fitted lines are smooth terms from a gam fitted to species richness trends over time"}
 
@@ -175,8 +175,15 @@ trap_sr_ts %>% drop_na(habitat) %>%
 ```
 
 ### 4. Community structure
-As well as the total species richness of communities, its also important to understand their structure, i.e. are there any trends in species turnover. This application displays the results from  different clustering algorithms applied to the species level data, which were applied to highlight trends in community composition. I applied three different methods, NMDS , t-SNE, and UMAP, to reduce the dimensions of the community data, and the results are 3d visualizations of community composition for each lysate sample. You can visualize trends according to different covariate data using the drop down menu. There are clear changes in community composition with time (the week variable), and latitude. 
+As well as the total species richness of communities, its also important to understand their structure, i.e. are there any trends in species turnover. This application displays the results from  different clustering algorithms applied to the species level data, which were applied to highlight trends in community composition. I applied three different methods to reduce the dimensions of the community data:  
+  
+  
+1. Non-metric multidimensional scaling (NMDS).
+2. [tSNE](https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf).
+3. [UMAP](https://arxiv.org/abs/1802.03426) 
 
-<iframe src ="https://robgoodsell.shinyapps.io/community_structure_app/" height=1000px width=1000px />
+The results are 3d visualizations of community composition for each lysate sample. You can visualize trends according to different covariate data using the drop down menu. There are clear changes in community composition with time (the week variable), and latitude. Hovering over each point will reveal trap information about the sample. 
+
+<iframe src ="https://robgoodsell.shinyapps.io/community_structure_app/" height=800px width=1000px />
 
 
