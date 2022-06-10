@@ -8,4 +8,5 @@ editor_options:
   chunk_output_type: console
 ---
 
-Click on this [link](exploratory-analysis.html) to see my results.
+This is a ´workflowr´project to share some of the preliminary analyses from the Insect biome atlas project. 
+
