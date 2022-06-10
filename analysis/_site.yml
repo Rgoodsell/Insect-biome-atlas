@@ -7,10 +7,6 @@ navbar:
     href: index.html
   - text: Exploratory analysis
     href: exploratory-analysis.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
   right:
   - icon: fab fa-github
     text: Source code
@@ -19,6 +15,5 @@ output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
-    code_folding: hide
     theme: cosmo
     highlight: textmate
