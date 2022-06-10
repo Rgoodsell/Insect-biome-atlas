@@ -3,13 +3,9 @@ title: "Exploratory analyses of the IBA data"
 author: "Rob Goodsell"
 date: '2022-06-06'
 output:
-  html_document:
-    toc: no
-    df_print: paged
   workflowr::wflow_html:
-    toc: no
-    code_folding: hide
-  html_notebook: default
+    toc: true
+    code_folding: hide 
 editor_options:
   chunk_output_type: console
 ---
