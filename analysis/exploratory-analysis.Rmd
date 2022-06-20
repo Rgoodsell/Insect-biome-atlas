@@ -1,9 +1,11 @@
 ---
 title: "Exploratory analyses of the IBA data"
 author: "Rob Goodsell"
-date: '2022-06-06'
+date: '2022-06-20'
+site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
+      code_folding: hide 
 editor_options:
   chunk_output_type: console
 ---
