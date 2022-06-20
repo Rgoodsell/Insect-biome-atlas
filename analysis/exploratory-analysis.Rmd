@@ -189,6 +189,4 @@ As well as the total species richness of communities, its also important to unde
 
 The results are 3d visualizations of community composition for each lysate sample. You can visualize trends according to different covariate data using the drop down menu. There are clear changes in community composition with time (the week variable), and latitude. Hovering over each point will reveal trap information about the sample. 
 
-<iframe src ="https://robgoodsell.shinyapps.io/community_structure_app/" height=800px width=1000px />
-
 
