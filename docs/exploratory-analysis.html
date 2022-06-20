@@ -18,7 +18,7 @@
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -31,12 +31,8 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
@@ -237,73 +233,7 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
 
 
 
@@ -313,16 +243,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -361,14 +281,6 @@ div.tocify {
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Exploratory analyses of the IBA data</h1>
@@ -402,7 +314,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-06-10
+<strong>Last updated:</strong> 2022-06-20
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -533,15 +445,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastree06fd107eedaae51072addc0c6b961dcb60bfe144targetblank06fd107a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastree4bdc141d0ae93610d1b3c44f6a0b1553106a45d6targetblank4bdc141a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/06fd107eedaae51072addc0c6b961dcb60bfe144" target="_blank">06fd107</a>
+<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/4bdc141d0ae93610d1b3c44f6a0b1553106a45d6" target="_blank">4bdc141</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastree06fd107eedaae51072addc0c6b961dcb60bfe144targetblank06fd107a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomRgoodsellInsectbiomeatlastree4bdc141d0ae93610d1b3c44f6a0b1553106a45d6targetblank4bdc141a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -551,7 +463,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/06fd107eedaae51072addc0c6b961dcb60bfe144" target="_blank">06fd107</a>.
+<a href="https://github.com/Rgoodsell/Insect-biome-atlas/tree/4bdc141d0ae93610d1b3c44f6a0b1553106a45d6" target="_blank">4bdc141</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -619,6 +531,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Rgoodsell/Insect-biome-atlas/blob/4bdc141d0ae93610d1b3c44f6a0b1553106a45d6/analysis/exploratory-analysis.Rmd" target="_blank">4bdc141</a>
+</td>
+<td>
+Rgoodsell
+</td>
+<td>
+2022-06-20
+</td>
+<td>
+update analysis &amp; data for IBA project
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Rgoodsell/Insect-biome-atlas/bc213c12006eb96ee45ada1af5176bba9017b1ca/docs/exploratory-analysis.html" target="_blank">bc213c1</a>
+</td>
+<td>
+Rgoodsell
+</td>
+<td>
+2022-06-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -995,12 +941,14 @@ spike_ins &lt;- c(&quot;Shelfordella lateralis&quot;, &quot;Gryllus bimaculatus&
                &quot;Drosophila bicornuta&quot;,  &quot;Drosophila serrata&quot;, 
                &quot;Gryllodes supplicans&quot;, &quot;Gryllus campestris&quot;)
 
-arthropods  &lt;-  filter(IBA_species , Phylum == &quot;Arthropoda&quot;) %&gt;%  
+arthropods  &lt;-  
+         # Filter to arthropods
          # Remove unclassified sequences and spike ins
-         filter(!str_detect(Species , &quot;unclassified|_X$|_XX$|_XXX$&quot;),    
+         filter(IBA_species , Phylum == &quot;Arthropoda&quot;,
+                !str_detect(Species , &quot;unclassified|_X$|_XX$|_XXX$&quot;),    
                 !Species %in% spike_ins) %&gt;%   
          # General tidying
-         select(-c(&quot;Kingdom&quot; , &quot;Phylum&quot; , &quot;Class&quot; , 
+         select(-c(&quot;Kingdom&quot; , &quot;Phylum&quot; , &quot;Class&quot; ,
                    &quot;Order&quot; , &quot;Family&quot; , &quot;Genus&quot; , &quot;BOLD_bin&quot;)) %&gt;%  
          pivot_longer(-Species , names_to = &quot;lysate_ID&quot; , 
                                 values_to = &quot;reads&quot;) %&gt;%                   
@@ -1009,38 +957,38 @@ arthropods  &lt;-  filter(IBA_species , Phylum == &quot;Arthropoda&quot;) %&gt;%
          filter(reads &gt; 20 , !str_detect(lysate_ID , &quot;[Nn]eg|[Pp]os|air&quot;)) %&gt;%                      
          left_join(IBA_locs)</code></pre>
 </div>
-<div id="species-richness-vs-habitat" class="section level3">
-<h3>2. Species richness vs Habitat</h3>
-<p>Something important to consider are the trends in species richness
-across different habitat types. There are clear trends of species
-richness across different habitats, with grasslands and croplands having
-the highest number of species, however all habitats are associated with
-fairly wide distributions.</p>
-<pre class="r"><code>trap_sr &lt;- arthropods %&gt;%
-        group_by(trap_ID , Species ,  habitat) %&gt;% 
-        summarise(total_reads = sum(reads)) %&gt;%
-        ungroup() %&gt;% 
-        mutate(pres = 1*(total_reads&gt;0)) %&gt;%  # convert reads to presence absence
-        group_by(trap_ID , habitat) %&gt;% 
-        summarise(species_richness = sum(pres))
+<div id="alpha-diversity" class="section level3">
+<h3>2. Alpha diversity</h3>
+<p>A key question is how does insect diversity change across
+environmental gradients. We already have the habitat types to hand, and
+these could impact total insect diversity, so I started here. First
+though, it’s important to consider how habitat is distributed
+geographically.</p>
+<pre class="r"><code># get map outline
+sweden &lt;- ne_countries(country = &quot;sweden&quot; , scale = &quot;large&quot; , returnclass = &quot;sf&quot;) %&gt;% 
+          st_transform(crs = 4124)
 
-trap_sr %&gt;% drop_na(habitat) %&gt;% 
-          ggplot(aes(reorder(habitat , - species_richness) , species_richness))+
-          geom_violin(aes(fill=habitat) , alpha = .2 , lwd = 0)+
-          geom_beeswarm(aes(fill = habitat) , pch=21 , alpha = .7 , size = 1.2)+
-          geom_pointrange(stat=&quot;summary&quot; , pch = 21 , fill = &quot;white&quot;, size = 1.25, fatten = 1.25)+
-          scale_fill_manual(values=met.brewer(&quot;Moreau&quot;, 7))+
-          theme_classic()+
-          coord_flip()+
-          theme(legend.position = &quot;none&quot; , panel.grid.major.y = element_line( linetype = 2) , 
-                axis.text = element_text(size = 10),
-                axis.title = element_text(size = 14))+
-          labs(y = &quot;Species richness&quot; , x = &quot;Habitat&quot; , fill = &quot;Habitat&quot;)</code></pre>
+trap_sr_geo &lt;- arthropods %&gt;% 
+  group_by(trap_ID , Species ,habitat , month , lat , lon) %&gt;% 
+  summarise(total_reads = sum(reads)) %&gt;%
+  ungroup() %&gt;% 
+  mutate(pres = 1*(total_reads&gt;0)) %&gt;%  # convert reads to presence absence
+  group_by(trap_ID , lat, lon, habitat) %&gt;% 
+  summarise(species_richness = sum(pres)) %&gt;%
+  ungroup() %&gt;% drop_na(lon , lat) 
+
+ggplot()+
+  geom_sf(data =sweden)+
+  geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
+                                      fill = species_richness), pch=21 , alpha = 1)+
+  scale_size_continuous(range = c(1,2))+
+  facet_wrap(~habitat , nrow = 1)+
+  theme(legend.position = &quot;none&quot; , axis.text = element_blank())</code></pre>
 <div class="figure" style="text-align: center">
-<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-3-1.png" alt="Species richness (aggregated by trap), across habitat types. Each point is the cumulative species richness over the full year sampling period" width="672" />
+<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-3-1.png" alt="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." width="960" />
 <p class="caption">
-Species richness (aggregated by trap), across habitat types. Each point
-is the cumulative species richness over the full year sampling period
+Trap locations across different habitat types, point size represent
+cumulative species richness across full sampling year for a single trap.
 </p>
 </div>
 <p>
@@ -1080,36 +1028,43 @@ Rgoodsell
 </table>
 </div>
 </div>
-<p>However it’s not clear whether these effects are causal or colinear
-with climatic or other latitudinal gradients, as habitats have different
+<p>From this figure its clear that habitat could be colinear with
+climatic or other latitudinal gradients, as habitats have different
 geographic ranges. For example croplands and grasslands are primarily
 southerly, whilst forests have a more even distribution across the
 country.</p>
-<pre class="r"><code># get map outline
-sweden &lt;- ne_countries(country = &quot;sweden&quot; , scale = &quot;large&quot; , returnclass = &quot;sf&quot;) %&gt;% 
-  st_transform(crs = 4124)
+<p>For the moment, to understand changes in <span
+class="math inline">\(\alpha\)</span> diversity using presence absence
+data we only look at raw species ricnhess (total number of unique
+species) between sites. There are clear trends of species richness
+across different habitats, with grasslands and croplands having the
+highest number of species, however all habitats are associated with
+fairly wide distributions.</p>
+<pre class="r"><code>trap_sr &lt;- arthropods %&gt;%
+        group_by(trap_ID , Species ,  habitat) %&gt;% 
+        summarise(total_reads = sum(reads)) %&gt;%
+        ungroup() %&gt;% 
+        mutate(pres = 1*(total_reads&gt;0)) %&gt;%  # convert reads to presence absence
+        group_by(trap_ID , habitat) %&gt;% 
+        summarise(species_richness = sum(pres))
 
-trap_sr_geo &lt;- arthropods %&gt;% 
-  group_by(trap_ID , Species ,habitat , month , lat , lon) %&gt;% 
-  summarise(total_reads = sum(reads)) %&gt;%
-  ungroup() %&gt;% 
-  mutate(pres = 1*(total_reads&gt;0)) %&gt;%  # convert reads to presence absence
-  group_by(trap_ID , lat, lon, habitat) %&gt;% 
-  summarise(species_richness = sum(pres)) %&gt;%
-  ungroup() %&gt;% drop_na(lon , lat) 
-
-ggplot()+
-  geom_sf(data =sweden)+
-  geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
-                                      fill = species_richness), pch=21 , alpha = 1)+
-  scale_size_continuous(range = c(1,2))+
-  facet_wrap(~habitat , nrow = 1)+
-  theme(legend.position = &quot;none&quot; , axis.text = element_blank())</code></pre>
+trap_sr %&gt;% drop_na(habitat) %&gt;% 
+          ggplot(aes(reorder(habitat , - species_richness) , species_richness))+
+          geom_violin(aes(fill=habitat) , alpha = .2 , lwd = 0)+
+          geom_beeswarm(aes(fill = habitat) , pch=21 , alpha = .7 , size = 1.2)+
+          geom_pointrange(stat=&quot;summary&quot; , pch = 21 , fill = &quot;white&quot;, size = 1.25, fatten = 1.25)+
+          scale_fill_manual(values=met.brewer(&quot;Moreau&quot;, 7))+
+          theme_classic()+
+          coord_flip()+
+          theme(legend.position = &quot;none&quot; , panel.grid.major.y = element_line( linetype = 2) , 
+                axis.text = element_text(size = 10),
+                axis.title = element_text(size = 14))+
+          labs(y = &quot;Species richness&quot; , x = &quot;Habitat&quot; , fill = &quot;Habitat&quot;)</code></pre>
 <div class="figure" style="text-align: center">
-<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-4-1.png" alt="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." width="960" />
+<img src="figure/exploratory-analysis.Rmd/unnamed-chunk-4-1.png" alt="Species richness (aggregated by trap), across habitat types. Each point is the cumulative species richness over the full year sampling period" width="672" />
 <p class="caption">
-Trap locations across different habitat types, point size represent
-cumulative species richness across full sampling year for a single trap.
+Species richness (aggregated by trap), across habitat types. Each point
+is the cumulative species richness over the full year sampling period
 </p>
 </div>
 <p>
@@ -1171,9 +1126,8 @@ Rgoodsell
 </table>
 </div>
 </div>
-</div>
-<div id="species-richness-over-time" class="section level3">
-<h3>3. Species richness over time</h3>
+<div id="species-richness-over-time" class="section level4">
+<h4>3. Species richness over time</h4>
 <p>A key question is how species richness changes over time. The plot
 below displays the change in species richness over time for each
 habitat. It’s clear that all habitats display the same seasonal trend in
@@ -1222,6 +1176,7 @@ Rgoodsell
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -1332,8 +1287,6 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -1365,41 +1318,7 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
