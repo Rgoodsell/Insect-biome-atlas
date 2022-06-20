@@ -4,8 +4,10 @@ author: "Rob Goodsell"
 date: '2022-06-20'
 site: workflowr::wflow_site
 output:
+  html_notebook: default
   workflowr::wflow_html:
-      code_folding: hide 
+    toc: false
+    code_folding: hide
 editor_options:
   chunk_output_type: console
 ---
