@@ -98,7 +98,7 @@ arthropods  <-
 ```
 
 
-### 2. Alpha diversity 
+# 2. Alpha diversity 
 A key question is how does insect diversity change across environmental gradients. We already have the habitat types to hand, and these could impact total insect diversity, so I started here. First though, it's important to consider how habitat is distributed geographically. 
 
 ```{r , warnings = FALSE , message=FALSE , fig.cap="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." , fig.width=10 , fig.height = 5}
@@ -153,7 +153,7 @@ trap_sr %>% drop_na(habitat) %>%
 ```
     
 
-#### 3. Species richness over time
+# 3. Species richness over time
 A key question is how species richness changes over time. The plot below displays the change in species richness over time for each habitat. It's clear that all habitats display the same seasonal trend in total species richness, with the highest diversity in the summer months, but a secondary 'peak' in autumn. 
 
 ```{r , echo=FALSE , warning=FALSE , message=FALSE , fig.cap="Species richness over time for each habitat type. Points represent species richness of an individial trap, fitted lines are smooth terms from a gam fitted to species richness trends over time"}
@@ -179,7 +179,7 @@ trap_sr_ts %>% drop_na(habitat) %>%
 
 ```
 
-### 4. Community structure
+# 4. Community structure
 As well as the total species richness of communities, its also important to understand their structure, i.e. are there any trends in species turnover. This application displays the results from  different clustering algorithms applied to the species level data, which were applied to highlight trends in community composition. I applied three different methods to reduce the dimensions of the community data:  
   
   
