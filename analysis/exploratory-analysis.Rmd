@@ -4,11 +4,14 @@ author: "Rob Goodsell"
 date: '2022-06-06'
 output:
   workflowr::wflow_html:
-    toc: true
-    code_folding: hide 
 editor_options:
   chunk_output_type: console
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
 
 # 1. Introduction
 
@@ -71,12 +74,14 @@ spike_ins <- c("Shelfordella lateralis", "Gryllus bimaculatus",
                "Drosophila bicornuta",  "Drosophila serrata", 
                "Gryllodes supplicans", "Gryllus campestris")
 
-arthropods  <-  filter(IBA_species , Phylum == "Arthropoda") %>%  
+arthropods  <-  
+         # Filter to arthropods
          # Remove unclassified sequences and spike ins
-         filter(!str_detect(Species , "unclassified|_X$|_XX$|_XXX$"),    
+         filter(IBA_species , Phylum == "Arthropoda",
+                !str_detect(Species , "unclassified|_X$|_XX$|_XXX$"),    
                 !Species %in% spike_ins) %>%   
          # General tidying
-         select(-c("Kingdom" , "Phylum" , "Class" , 
+         select(-c("Kingdom" , "Phylum" , "Class" ,
                    "Order" , "Family" , "Genus" , "BOLD_bin")) %>%  
          pivot_longer(-Species , names_to = "lysate_ID" , 
                                 values_to = "reads") %>%                   
@@ -89,8 +94,35 @@ arthropods  <-  filter(IBA_species , Phylum == "Arthropoda") %>%
 ```
 
 
-### 2. Species richness vs Habitat
-Something important to consider are the trends in species richness across different habitat types. There are clear trends of species richness across different habitats, with grasslands and croplands having the highest number of species, however all habitats are associated with fairly wide distributions.
+### 2. Alpha diversity 
+A key question is how does insect diversity change across environmental gradients. We already have the habitat types to hand, and these could impact total insect diversity, so I started here. First though, it's important to consider how habitat is distributed geographically. 
+
+```{r , warnings = FALSE , message=FALSE , fig.cap="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." , fig.width=10 , fig.height = 5}
+# get map outline
+sweden <- ne_countries(country = "sweden" , scale = "large" , returnclass = "sf") %>% 
+          st_transform(crs = 4124)
+
+trap_sr_geo <- arthropods %>% 
+  group_by(trap_ID , Species ,habitat , month , lat , lon) %>% 
+  summarise(total_reads = sum(reads)) %>%
+  ungroup() %>% 
+  mutate(pres = 1*(total_reads>0)) %>%  # convert reads to presence absence
+  group_by(trap_ID , lat, lon, habitat) %>% 
+  summarise(species_richness = sum(pres)) %>%
+  ungroup() %>% drop_na(lon , lat) 
+
+ggplot()+
+  geom_sf(data =sweden)+
+  geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
+                                      fill = species_richness), pch=21 , alpha = 1)+
+  scale_size_continuous(range = c(1,2))+
+  facet_wrap(~habitat , nrow = 1)+
+  theme(legend.position = "none" , axis.text = element_blank())
+```
+
+From this figure its clear that habitat could be colinear with climatic or other latitudinal gradients, as habitats have different geographic ranges. For example croplands and grasslands are primarily southerly, whilst forests have a more even distribution across the country.   
+  
+For the moment, to understand changes in $\alpha$ diversity using presence absence data we only look at raw species ricnhess (total number of unique species) between sites. There are clear trends of species richness across different habitats, with grasslands and croplands having the highest number of species, however all habitats are associated with fairly wide distributions.
 
 ```{r , warning=FALSE , message=FALSE , fig.cap="Species richness (aggregated by trap), across habitat types. Each point is the cumulative species richness over the full year sampling period" }
 trap_sr <- arthropods %>%
@@ -116,35 +148,8 @@ trap_sr %>% drop_na(habitat) %>%
 
 ```
     
-However it's not clear whether these effects are causal or colinear with climatic or other latitudinal gradients, as habitats have different geographic ranges. For example croplands and grasslands are primarily southerly, whilst forests have a more even distribution across the country. 
-```{r , warnings = FALSE , message=FALSE , fig.cap="Trap locations across different habitat types, point size represent cumulative species richness across full sampling year for a single trap." , fig.width=10 , fig.height = 5}
-# get map outline
-sweden <- ne_countries(country = "sweden" , scale = "large" , returnclass = "sf") %>% 
-  st_transform(crs = 4124)
 
-trap_sr_geo <- arthropods %>% 
-  group_by(trap_ID , Species ,habitat , month , lat , lon) %>% 
-  summarise(total_reads = sum(reads)) %>%
-  ungroup() %>% 
-  mutate(pres = 1*(total_reads>0)) %>%  # convert reads to presence absence
-  group_by(trap_ID , lat, lon, habitat) %>% 
-  summarise(species_richness = sum(pres)) %>%
-  ungroup() %>% drop_na(lon , lat) 
-
-ggplot()+
-  geom_sf(data =sweden)+
-  geom_point(data = trap_sr_geo , aes(lon , lat , size = species_richness , 
-                                      fill = species_richness), pch=21 , alpha = 1)+
-  scale_size_continuous(range = c(1,2))+
-  facet_wrap(~habitat , nrow = 1)+
-  theme(legend.position = "none" , axis.text = element_blank())
-```
-
-
-  
-    
-    
-### 3. Species richness over time
+#### 3. Species richness over time
 A key question is how species richness changes over time. The plot below displays the change in species richness over time for each habitat. It's clear that all habitats display the same seasonal trend in total species richness, with the highest diversity in the summer months, but a secondary 'peak' in autumn. 
 
 ```{r , echo=FALSE , warning=FALSE , message=FALSE , fig.cap="Species richness over time for each habitat type. Points represent species richness of an individial trap, fitted lines are smooth terms from a gam fitted to species richness trends over time"}
